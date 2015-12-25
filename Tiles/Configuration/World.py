@@ -64,7 +64,21 @@ class TileServer(Tile, Crumbs, Navigation, Messaging.Message, Player.Player, Set
 			#Messaging
 			"m" : {
 				"sm"	: "SendMessage"
+			},
+			#Sound Studio
+			"musictrack" : {
+				"getsharedmusictracks" 		: 'GetMySharedTracks',
+				"getmymusictracks"	  	: 'FetchMyMusicTracks',
+				"savemymusictrack"	  	: 'SaveMyMusic',
+				"deletetrack"		  	: 'DeleteMyMusic',
+				"loadmusictrack"		: 'LoadMusicByTrack',
+				"sharemymusictrack"	  	: "ShareTrack",
+				"broadcastingmusictracks"	: "BroadcastMusic",
+				"refreshmytracklikes"		: "LikeRefreshMusics",
+				"liketrack"			: "LikePlayerTrack",
+				"canliketrack"			: "CanLikeMyTrack"
 			}
+
 		}
 	}
 
