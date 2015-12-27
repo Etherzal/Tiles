@@ -155,6 +155,17 @@ class Database(Connection):
 
 		return Query.execute().fetchall()[0][0]
 
+	def getAllByIdentifier(self, identify_column, identifier, column, fromTable):
+		Query = self.prepare("SELECT {0} FROM `{1}` WHERE `{2}` = :identifier".format(column, fromTable, identify_column))
+		Query.bindValue(":identifier", identifier)
+
+		return Query.execute().fetchall()[0]
+
+	def executeMe(self, query):
+		Query = self.prepare(query)
+
+		return Query.execute()
+
 	def false(self, *args, **kwargs):
 		Logger().error("Error in Tile-Database: "+str(self.errored))
 		return False

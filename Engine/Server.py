@@ -28,7 +28,7 @@ class TCPServer(object):
 	ports = list()
 
 	def __init__(self, backlog=5, errormode=True):
-		#super(TCPServer, self).__init__()
+		super(TCPServer, self).__init__()
 
 		# Alternate way to set the configuration.
 		self.backlog = int(backlog)	

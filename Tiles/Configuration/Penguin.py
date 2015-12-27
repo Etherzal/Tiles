@@ -127,8 +127,7 @@ class Penguin(object):
 			packs += [""]
 		packs = list([packs[0], int_id] + list(packs[1:]))
 
-		packetArray = list(("", str(Packet.WORLD_PREFIX))) + packs + list((""))
-
+		packetArray = list(("", str(Packet.WORLD_PREFIX))) + packs + [""]
 		packet = join(packetArray, str(Packet.PACKET_DELIMITER))
 
 		self.send(packet)

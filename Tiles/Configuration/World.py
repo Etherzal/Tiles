@@ -13,9 +13,10 @@ from random import *
 
 from Tiles.Configuration.Crumbs.Crumb import Crumbs
 from Tiles.Configuration.Handlers.Play.Navigation import Navigation
+from Tiles.Configuration.Handlers.Entertainment import SStudio
 from Tiles.Configuration.Handlers.Play import Messaging, items, Player, Settings
 
-class TileServer(Tile, Crumbs, Navigation, Messaging.Message, Player.Player, Settings.Settings):
+class TileServer(Tile, Crumbs, Navigation, Messaging.Message, Player.Player, Settings.Settings, SStudio.SStudio):
 
 	worldHandlers = {
 		# Categories
@@ -68,17 +69,19 @@ class TileServer(Tile, Crumbs, Navigation, Messaging.Message, Player.Player, Set
 			#Sound Studio
 			"musictrack" : {
 				"getsharedmusictracks" 		: 'GetMySharedTracks',
-				"getmymusictracks"	  	: 'FetchMyMusicTracks',
-				"savemymusictrack"	  	: 'SaveMyMusic',
-				"deletetrack"		  	: 'DeleteMyMusic',
-				"loadmusictrack"		: 'LoadMusicByTrack',
-				"sharemymusictrack"	  	: "ShareTrack",
+				"getmymusictracks"	  		: 'FetchMyMusicTracks',
+				"savemymusictrack"	  		: 'SaveMyMusic',
+				"deletetrack"		  		: 'DeleteMyMusic',
+				"loadmusictrack"			: 'LoadMusicByTrack',
+				"sharemymusictrack"	  		: "ShareTrack",
 				"broadcastingmusictracks"	: "BroadcastMusic",
-				"refreshmytracklikes"		: "LikeRefreshMusics",
-				"liketrack"			: "LikePlayerTrack",
-				"canliketrack"			: "CanLikeMyTrack"
+				"refreshmytracklikes"		: "RefreshMusicLikes",
+				"liketrack"					: "LikePlayerTrack",
+				"canliketrack"				: "CanLikeMyTrack"
+			},
+			"p" : {
+				"checkpufflename" : "checkname"
 			}
-
 		}
 	}
 
@@ -87,6 +90,14 @@ class TileServer(Tile, Crumbs, Navigation, Messaging.Message, Player.Player, Set
 		self.loadCrumbs()
 
 		Logger().info("World Instance Created!")
+		self.init_sstudio()
+
+	def checkname(self, socket):
+		penguin = self._penguins[socket]
+		if not Packet.Data[2].isdigit():
+			penguin.sendWorldPacket("checkpufflename", Packet.Data[2], "1")
+		else:
+			penguin.sendWorldPacket("checkpufflename", Packet.Data[2], "-1")
 
 	def handleLoginProcess(self, socket):
 		penguin = self._penguins[socket]
