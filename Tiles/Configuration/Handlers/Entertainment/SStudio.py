@@ -19,14 +19,15 @@ class SStudio(object):
 		self.endTimestamp = 0
 
 	def refreshBroadcasting(self, penguin, add):
-		penguin_tracks_shared = penguin.database.getColumnById(penguin.id, "SharedTrack")
-		if penguin_tracks_shared != False and penguin_tracks_shared != None  and penguin_tracks_shared != "":
-			shared_track = str(penguin_tracks_shared)
-			broadcastingTracks = list(str(k[3]) for k in self.broadcasting)
-			if add:
-				self.updateBroadcasting(shared_track, penguin.username, penguin.swid)
-			else:
-				self.removeBroadcasting(shared_track)
+		if penguin.database != None:
+			penguin_tracks_shared = penguin.database.getColumnById(penguin.id, "SharedTrack")
+			if penguin_tracks_shared != False and penguin_tracks_shared != None  and penguin_tracks_shared != "":
+				shared_track = str(penguin_tracks_shared)
+				broadcastingTracks = list(str(k[3]) for k in self.broadcasting)
+				if add:
+					self.updateBroadcasting(shared_track, penguin.username, penguin.swid)
+				else:
+					self.removeBroadcasting(shared_track)
 
 
 	def init_sstudio(self):
@@ -249,6 +250,7 @@ class SStudio(object):
 						self.removeBroadcasting(sharing)
 					
 					self.updateBroadcasting(track, penguin.username, penguin.swid)
+					self.loadedTracks[track][1][1] = "0"
 					
 					penguin.database.updateColumnById(penguin.id, "SharedTrack", track)
 					penguin.sendWorldPacket("sharemymusictrack", "1")
@@ -260,6 +262,8 @@ class SStudio(object):
 
 					if sharing != track:
 						self.removeBroadcasting(track)
+
+					self.loadedTracks[track][1][1] = "0"
 
 					penguin.database.updateColumnById(penguin.id, "SharedTrack", "")
 					penguin.sendWorldPacket("sharemymusictrack", "1", "|".join([track, "0"]))					
