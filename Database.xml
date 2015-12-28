@@ -2,5 +2,5 @@
 	<user>root</user>
 	<pass></pass>
 	<host>127.0.0.1</host>
-	<dbname>Sprinkle</dbname>
+	<dbname>Tiles</dbname>
 </configs>
