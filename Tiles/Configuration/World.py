@@ -161,3 +161,5 @@ class TileServer(Tile, Crumbs, Navigation, Messaging.Message, Player.Player, Set
 		penguin = self._penguins[socket]
 
 		self.databaseManager.remove(penguin)
+
+		self.refreshBroadcasting(penguin, False)

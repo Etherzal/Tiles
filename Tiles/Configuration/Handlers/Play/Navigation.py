@@ -21,13 +21,20 @@ class Navigation(object):
 		elif penguin.room is not None:
 			penguin.room.removePlayer(penguin)
 
-		# self.leaveWaddle(penguin)
-
 		penguin.frame = 1
 		penguin.x = x
 		penguin.y = y
+
+		remove_broadcast = False
+		if str(self.rooms[str(roomId)].externalId) == '120':
+			# \\Handle sound studio//
+			self.refreshBroadcasting(penguin, True)
+		else:
+			remove_broadcast = True
 			
 		self.rooms[str(roomId)].addPlayer(penguin)
+		if remove_broadcast:
+			self.refreshBroadcasting(penguin, False)
 
 	def JoinServer(self, socket):
 		penguin = self._penguins[socket]

@@ -18,6 +18,17 @@ class SStudio(object):
 		self.broadcasting = list()
 		self.endTimestamp = 0
 
+	def refreshBroadcasting(self, penguin, add):
+		penguin_tracks_shared = penguin.database.getColumnById(penguin.id, "SharedTrack")
+		if penguin_tracks_shared != False and penguin_tracks_shared != None  and penguin_tracks_shared != "":
+			shared_track = str(penguin_tracks_shared)
+			broadcastingTracks = list(str(k[3]) for k in self.broadcasting)
+			if add:
+				self.updateBroadcasting(shared_track, penguin.username, penguin.swid)
+			else:
+				self.removeBroadcasting(shared_track)
+
+
 	def init_sstudio(self):
 		Logger().warn("Sound Studio is online!")
 		self.broadCaster = Thread(target=self.Broadcaster)
@@ -114,7 +125,7 @@ class SStudio(object):
 			currentTime = time()
 			if len(self.broadcasting) > 0:
 				if currentTime >= self.endTimestamp:
-					musics = ",".join("|".join(k[:-2]) for k in self.broadcasting)
+					musics = ",".join("|".join(k[:-1]) for k in self.broadcasting)
 					count = str(len(self.broadcasting))				
 
 					for socket, penguin in self._penguins.iteritems():
@@ -219,7 +230,7 @@ class SStudio(object):
 					notes = details[2]
 					Hash = details[3]
 
-					loadedTracks.append("%".join((str(track), str(name), str(shared), str(notes), str(Hash), str(liked))))
+					loadedTracks.append("%".join((str(track), str(name), str(shared), str(notes), str(Hash), str(likes))))
 
 		loadedTrackString = "%-1%".join(loadedTracks)
 		penguin.sendWorldPacket("loadmusictrack", loadedTrackString)
@@ -256,7 +267,7 @@ class SStudio(object):
 	def BroadcastMusic(self, socket):
 		penguin = self._penguins[socket]
 
-		musics = ",".join("|".join(k) for k in self.broadcasting)
+		musics = ",".join("|".join(k[:-1]) for k in self.broadcasting)
 		count = str(len(self.broadcasting))				
 
 		playerPosition = self.getPosition(penguin.id)
@@ -287,12 +298,12 @@ class SStudio(object):
 			if str(details[0]) == str(peng_id):
 				name, shared, likes, liked = details[1]
 				pengs_likes = {
-					str(k.split(":")[0]) : int(round(k.split(":")[1])) for k in liked.split(",") if liked != ""
+					str(k.split(":")[0]) : float(k.split(":")[1]) for k in liked.split(",") if liked != ""
 				}
 				currentTime = time()
 
 				if str(penguin.id) in pengs_likes:
-					liked_timestamp = int(pengs_likes[str(penguin.id)])
+					liked_timestamp = float(pengs_likes[str(penguin.id)])
 					if currentTime - liked_timestamp > 0:
 						# He can like it ;)
 						self.loadedTracks[track][1][2] = str(int(likes)+1)
@@ -332,12 +343,12 @@ class SStudio(object):
 				name, shared, likes, liked = details[1]
 
 				pengs_likes = {
-					str(k.split(":")[0]) : int(k.split(":")[1]) for k in liked.split(",") if liked != ""
+					str(k.split(":")[0]) : str(k.split(":")[1]) for k in liked.split(",") if liked != ""
 				}
 				currentTime = time()
 
 				if str(penguin.id) in pengs_likes:
-					liked_timestamp = int(pengs_likes[str(penguin.id)])
+					liked_timestamp = float(pengs_likes[str(penguin.id)])
 					if currentTime - liked_timestamp > 0:
 						penguin.sendWorldPacket("canliketrack", str(track), "1")
 					else:
